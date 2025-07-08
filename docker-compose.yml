@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: non_grata
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    restart: always
+
+  celery:
+    build: .
+    command: [
+      "celery",
+      "-A", "app.tasks.worker.celery_app",
+      "worker",
+      "--loglevel=info",
+      "-Q", "parsing"
+    ]
+    depends_on:
+      - redis
+      - db
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    restart: always
+
+volumes:
+  postgres_data:

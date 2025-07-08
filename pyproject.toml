@@ -1,0 +1,24 @@
+[project]
+name = "non-grata-backend"
+version = "0.1.0"
+description = "Backend for Non-Grata project"
+authors = [{ name = "Temirlan Tyulyubayev", email = "temikbjj@gmail.com" }]
+
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "sqlalchemy",
+    "alembic",
+    "psycopg2-binary",
+    "python-dotenv",
+    "celery",
+    "redis",
+    "httpx",
+    "fastapi-admin",
+    "prometheus-client",
+    "pydantic-settings"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
